@@ -36,7 +36,7 @@ const Circle = styled(motion.div)`
 const ParallaxBackground = () => {
   const { scrollY } = useScroll();
   
-  // Slower, more subtle movements
+  // slow er...
   const y1 = useTransform(scrollY, [0, 1000], [0, -50]);
   const y2 = useTransform(scrollY, [0, 1000], [0, -30]);
   const y3 = useTransform(scrollY, [0, 1000], [0, -20]);

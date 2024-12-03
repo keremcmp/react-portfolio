@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 import { Github, Linkedin, Youtube, Mail } from 'lucide-react';
 const AnimatedBackground = lazy(() => import('../components/AnimatedBackground'));
 const Robot2D = lazy(() => import('../components/Robot2D'));
-const ParallaxBackground = lazy(() => import('../components/ParallaxBackground')); // Add this line
+const ParallaxBackground = lazy(() => import('../components/ParallaxBackground'));
 
 const LoadingFallback = styled.div`
   position: absolute;
@@ -23,31 +23,37 @@ const LoadingFallback = styled.div`
 `;
 
 const HomeContainer = styled.main`
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 20px;
     text-align: center;
+    padding-top: 80px;
   }
+`;
 
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
+const ContentWrapper = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  z-index: 3;
+  padding-bottom: 100px; // Space for social icons on mobile
+
+  @media (max-width: 768px) {
+    align-items: center;
   }
 `;
 
 const Content = styled(motion.div)`
   padding: 0 100px;
   width: 50%;
-  z-index: 3;
   position: relative;
 
   @media (max-width: 1024px) {
@@ -57,8 +63,8 @@ const Content = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 100%;
-    padding: 0 20px;
-    margin-top: calc(env(safe-area-inset-top) + 20px);
+    padding: 0;
+    margin-top: 20px;
   }
 `;
 
@@ -70,6 +76,8 @@ const ButtonContainer = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
+    max-width: 300px;
   }
 `;
 
@@ -89,6 +97,11 @@ const Description = styled(motion.p)`
   margin-bottom: clamp(20px, 3vh, 30px);
   color: rgba(255, 255, 255, 0.9);
   max-width: 60ch;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 20px;
+  }
 `;
 
 const BaseButton = styled(motion.button)`
@@ -101,14 +114,11 @@ const BaseButton = styled(motion.button)`
   outline: none;
   width: 100%;
 
-  &:focus-visible {
-    box-shadow: 0 0 0 2px #8b5cf6;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
+  @media (min-width: 769px) {
     width: auto;
   }
 `;
+
 
 const CTA = styled(BaseButton)`
   background: rgba(255, 255, 255, 0.1);
@@ -164,8 +174,10 @@ const RobotContainer = styled.div`
   @media (max-width: 768px) {
     position: relative;
     width: 100%;
-    height: 200px;
-    max-height: 30vh;
+    height: 150px;
+    max-height: 20vh;
+    margin-top: -60px;
+    order: -1;
   }
 `;
 
@@ -179,10 +191,14 @@ const SocialIcons = styled.div`
   z-index: 10;
 
   @media (max-width: 768px) {
-    bottom: 30px;
+    position: relative;
+    bottom: auto;
+    margin-top: auto;
+    padding-top: 30px;
     gap: 15px;
   }
 `;
+
 
 const IconLink = styled(motion.a)`
   color: rgba(255, 255, 255, 0.7);
@@ -224,96 +240,86 @@ const Home = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </Helmet>
 
-        <Suspense fallback={<LoadingFallback>Loading...</LoadingFallback>}>
+      <Suspense fallback={<LoadingFallback>Loading...</LoadingFallback>}>
         <AnimatedBackground />
         <ParallaxBackground />
-        
-        </Suspense>
-     
+      </Suspense>
 
-      <Content
+      <ContentWrapper
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <Title
-          aria-level="1"
-          role="heading"
-        >
-          Hi, I'm Kerem Comertpay
-        </Title>
-        <Description>
-          A passionate developer crafting digital experiences through code and creativity.
-          I specialize in building innovative web solutions with modern technologies.
-        </Description>
-        <ButtonContainer>
-          <CTA
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleViewWork}
-            aria-label="View my work - Navigate to skills section"
-          >
-            View My Work
-          </CTA>
-          <DownloadCV
-            href={process.env.PUBLIC_URL + "/documents/cute.pdf"}
-            download="Kerem-Comertpay-CV.pdf"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Download my CV"
-            title="Download CV in PDF format"
-          >
-            Download CV
-          </DownloadCV>
-        </ButtonContainer>
-      </Content>
+        <RobotContainer aria-hidden="true">
+          <Suspense fallback={null}>
+            <Robot2D />
+          </Suspense>
+        </RobotContainer>
 
-      <RobotContainer aria-hidden="true">
-        <Suspense fallback={null}>
-          <Robot2D />
-        </Suspense>
-      </RobotContainer>
+        <Content>
+          <Title
+            aria-level="1"
+            role="heading"
+          >
+            Hi, I'm Kerem Comertpay
+          </Title>
+          <Description>
+            A passionate developer crafting digital experiences through code and creativity.
+            I specialize in building innovative web solutions with modern technologies.
+          </Description>
+          <ButtonContainer>
+            <CTA
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleViewWork}
+              aria-label="View my work - Navigate to skills section"
+            >
+              View My Work
+            </CTA>
+            <DownloadCV
+              href={process.env.PUBLIC_URL + "/documents/cute.pdf"}
+              download="Kerem-Comertpay-CV.pdf"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Download my CV"
+              title="Download CV in PDF format"
+            >
+              Download CV
+            </DownloadCV>
+          </ButtonContainer>
+        </Content>
 
-      <SocialIcons>
-        <IconLink 
-          href="https://github.com/keremcmp" 
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Visit my GitHub profile"
-        >
-          <Github size={20} />
-        </IconLink>
-        <IconLink 
-          href="https://www.linkedin.com/in/kerem-comertpay-409764182/" 
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Visit my LinkedIn profile"
-        >
-          <Linkedin size={20} />
-        </IconLink>
-        {/* <IconLink 
-          href="https://youtube.com/@YourChannel" 
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Visit my YouTube channel"
-        >
-          <Youtube size={20} />
-        </IconLink> */}
-        <IconLink 
-          href="mailto:keremcmp@hotmail.com" 
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Send me an email"
-        >
-          <Mail size={20} />
-        </IconLink>
-      </SocialIcons>
+        <SocialIcons>
+          <IconLink 
+            href="https://github.com/keremcmp" 
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Visit my GitHub profile"
+          >
+            <Github size={20} />
+          </IconLink>
+          <IconLink 
+            href="https://www.linkedin.com/in/kerem-comertpay-409764182/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Visit my LinkedIn profile"
+          >
+            <Linkedin size={20} />
+          </IconLink>
+          <IconLink 
+            href="mailto:keremcmp@hotmail.com" 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Send me an email"
+          >
+            <Mail size={20} />
+          </IconLink>
+        </SocialIcons>
+      </ContentWrapper>
     </HomeContainer>
   );
 };
