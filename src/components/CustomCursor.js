@@ -27,7 +27,7 @@ const CustomCursor = () => {
 
     const updateCursor = () => {
       // Interpolation factor (adjust for smoothness and speed)
-      const speed = 0.2;
+      const speed = 0.9;
 
       cursorPosition.current.x += (mousePosition.current.x - cursorPosition.current.x) * speed;
       cursorPosition.current.y += (mousePosition.current.y - cursorPosition.current.y) * speed;
