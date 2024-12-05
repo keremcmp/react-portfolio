@@ -6,13 +6,11 @@ import { Helmet } from 'react-helmet';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import image_logo from "../data/Kerem.png";
 
-
 const AnimatedBackground = lazy(() => import('../components/AnimatedBackground'));
 const Robot2D = lazy(() => import('../components/Robot2D'));
 const ParallaxBackground = lazy(() => import('../components/ParallaxBackground'));
 
 const INITIAL_LOAD_KEY = 'hasLoadedBefore';
-
 
 const LoadingScreen = styled(motion.div)`
   position: fixed;
@@ -128,15 +126,15 @@ const Content = styled(motion.div)`
 `;
 
 const Logo = styled.img`
-  width: 500px;
-  height: 500px;
+  width: 600px;
+  height: 600px;
   object-fit: contain;
   margin-bottom: 40px;
 
   @media (max-width: 768px) {
     margin-left: 0;
-    width: 150px;
-    height: 75px;
+    width: 300px;
+    height: 150px;
   }
 `;
 
