@@ -273,17 +273,23 @@ const ModalInfo = styled.div`
 const projects = [
   {
     id: 1,
-    title: 'Web App Dashboard',
-    description: 'A modern dashboard interface integrating real-time data visualization with interactive analytics.',
+    title: 'Greece',
+    description: 'July 2024',
     images: [randomImage, randomImage, randomImage],
     thumbnail: randomImage,
-    category: 'Web Development',
+    category: 'Vacation',
     year: '2024',
-    technologies: ['React', 'Node.js', 'D3.js'],
-    liveUrl: 'https://example.com',
-    githubUrl: 'https://github.com'
   },
-  // Add more projects as needed
+  {
+    id: 2,
+    title: 'Italy',
+    description: 'May 2024',
+    images: [randomImage, randomImage, randomImage, randomImage],
+    thumbnail: randomImage,
+    category: 'Vacation',
+    year: '2024'
+  },
+  // more projies
 ];
 
 const Gallery = () => {

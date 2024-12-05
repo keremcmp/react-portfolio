@@ -8,8 +8,9 @@ const SkillsContainer = styled(motion.main)`
   min-height: 100vh;
   padding: clamp(60px, 10vh, 100px) clamp(20px, 5vw, 50px);
   
-  @media (prefers-reduced-motion: reduce) {
-    scroll-behavior: auto;
+  @media (max-width: 768px) {
+    transform: none !important;
+    width: ${props => props.level}%;
   }
 `;
 
@@ -62,6 +63,8 @@ const ProgressSection = styled.section`
   max-width: 800px;
   margin: 0 auto;
   padding: clamp(10px, 2vw, 20px);
+  visibility: visible !important;
+  opacity: 1 !important;
 `;
 
 const ProgressContainer = styled.div`
@@ -92,8 +95,7 @@ const ProgressFill = styled(motion.div)`
   height: 100%;
   background: ${props => props.color || '#8b5cf6'};
   border-radius: 4px;
-  transform-origin: left;
-  will-change: transform;
+  position: relative;
 `;
 
 const SectionTitle = styled(motion.h2)`
@@ -113,10 +115,10 @@ const SubSectionTitle = styled(motion.h3)`
 // Update the data to include more meaningful descriptions
 const skillsData = [
   {
-    title: "Frontend Development",
-    description: "Modern web applications using React, Vue, and cutting-edge JavaScript. Focused on responsive design and optimal user experience.",
+    title: "Sales Engineer",
+    description: "I have been in sales for almost 10 years now and have developed myself in different sections of selling",
     color: "#61DAFB",
-    icon: "🎨"
+    icon: ""
   },
   {
     title: "Backend Development",
@@ -125,20 +127,26 @@ const skillsData = [
     icon: "⚙️"
   },
   {
-    title: "UI/UX Design",
-    description: "User-centered design with Figma and Adobe XD. Creating intuitive interfaces with focus on accessibility and usability.",
+    title: "Machine Learning",
+    description: "I have built several algorithms and recommender systems.",
     color: "#FF61F6",
     icon: "✨"
   }
 ];
 
 const programmingSkills = [
-  { name: 'JavaScript', level: 90, color: '#F7DF1E', years: 3 },
-  { name: 'React', level: 85, color: '#61DAFB', years: 2 },
-  { name: 'Python', level: 75, color: '#3776AB', years: 2 },
-  { name: 'Node.js', level: 80, color: '#339933', years: 2 },
-  { name: 'HTML/CSS', level: 95, color: '#E34F26', years: 3 },
-  { name: 'SQL', level: 70, color: '#4479A1', years: 2 }
+  { name: 'JavaScript', level: 90, color: '#4F9800', years: 3 },
+  { name: 'React', level: 85, color: '#4F9800', years: 2 },
+  { name: 'Python', level: 75, color: '#D57526', years: 2 },
+  { name: 'Node.js', level: 80, color: '#4F9800', years: 2 },
+  { name: 'HTML/CSS', level: 95, color: '#4F9800', years: 3 },
+  { name: 'SQL', level: 70, color: '#D57526', years: 2 },
+  {name: 'Scikit-learn', level: 75, color: '#D57526', years: 2},
+  {name: 'R', level: 80, color: '#4F9800', years: 3 },
+  {name: 'pandas', level: 85, color: '#4F9800', years: 2}
+
+
+  // scikit-learn, R, pandas, C#
 ];
 
 const Skills = () => {
@@ -194,40 +202,21 @@ const Skills = () => {
         </SubSectionTitle>
         
         {programmingSkills.map((skill, index) => (
-          <ProgressContainer 
-            key={skill.name}
-            role="progressbar"
-            aria-valuenow={skill.level}
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-label={`${skill.name} proficiency: ${skill.level}%`}
-          >
-            <ProgressLabel>
-              <span>{skill.name}</span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                {skill.level}% • {skill.years} {skill.years === 1 ? 'year' : 'years'}
-              </motion.span>
-            </ProgressLabel>
-            <ProgressBar>
-              <ProgressFill
-                color={skill.color}
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: skill.level / 100 }}
-                transition={{ 
-                  duration: 1,
-                  delay: 0.2,
-                  ease: "easeOut"
-                }}
-                viewport={{ once: true, margin: "-50px" }}
-              />
-            </ProgressBar>
-          </ProgressContainer>
-        ))}
+  <ProgressContainer key={skill.name}>
+    <ProgressLabel>
+      <span>{skill.name}</span>
+      <span>{skill.level}% • {skill.years} {skill.years === 1 ? 'year' : 'years'}</span>
+    </ProgressLabel>
+    <ProgressBar>
+      <ProgressFill
+        color={skill.color}
+        animate={{ width: `${skill.level}%` }}
+        initial={{ width: 0 }}
+        transition={{ duration: 1, delay: index * 0.1 }}
+      />
+    </ProgressBar>
+  </ProgressContainer>
+))}
       </ProgressSection>
     </SkillsContainer>
   );
