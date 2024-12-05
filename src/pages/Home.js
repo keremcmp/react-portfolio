@@ -4,10 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Github, Linkedin, Mail } from 'lucide-react';
+import image_logo from "../data/Kerem.png";
+
 
 const AnimatedBackground = lazy(() => import('../components/AnimatedBackground'));
 const Robot2D = lazy(() => import('../components/Robot2D'));
 const ParallaxBackground = lazy(() => import('../components/ParallaxBackground'));
+
 const INITIAL_LOAD_KEY = 'hasLoadedBefore';
 
 
@@ -90,6 +93,7 @@ const HomeContainer = styled.main`
     justify-content: flex-start;
     padding: 20px;
     text-align: center;
+    height: 100vh;
     padding-top: 80px;
   }
 `;
@@ -99,10 +103,12 @@ const ContentWrapper = styled(motion.div)`
   flex-direction: column;
   width: 100%;
   z-index: 3;
-  padding-bottom: 100px;
 
   @media (max-width: 768px) {
     align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding-bottom: 40px;
   }
 `;
 
@@ -111,15 +117,39 @@ const Content = styled(motion.div)`
   width: 50%;
   position: relative;
 
-  @media (max-width: 1024px) {
-    padding: 0 50px;
-    width: 60%;
-  }
-
   @media (max-width: 768px) {
     width: 100%;
     padding: 0;
-    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+`;
+
+const Logo = styled.img`
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  margin-bottom: 40px;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    width: 150px;
+    height: 75px;
+  }
+`;
+
+const Description = styled(motion.p)`
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  line-height: 1.6;
+  margin-bottom: clamp(20px, 3vh, 30px);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 60ch;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 20px;
   }
 `;
 
@@ -133,29 +163,6 @@ const ButtonContainer = styled.div`
     align-items: stretch;
     width: 100%;
     max-width: 300px;
-  }
-`;
-
-const Title = styled(motion.h1)`
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  margin-bottom: clamp(15px, 2vh, 20px);
-  background: linear-gradient(45deg, #ffffff 30%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
-  line-height: 1.2;
-`;
-
-const Description = styled(motion.p)`
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
-  line-height: 1.6;
-  margin-bottom: clamp(20px, 3vh, 30px);
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 60ch;
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-    padding: 0 20px;
   }
 `;
 
@@ -219,12 +226,13 @@ const RobotContainer = styled.div`
   pointer-events: none;
 
   @media (max-width: 768px) {
-    position: relative;
+    position: fixed;
     width: 100%;
-    height: 150px;
-    max-height: 20vh;
-    margin-top: -60px;
-    order: -1;
+    height: 50vh;
+    bottom: 0;
+    right: 0;
+    top: auto;
+    opacity: 0.2;
   }
 `;
 
@@ -240,11 +248,10 @@ const SocialIcons = styled(motion.div)`
   transition: opacity 0.5s ease;
 
   @media (max-width: 768px) {
-    position: relative;
-    bottom: auto;
-    margin-top: auto;
-    padding-top: 30px;
-    gap: 15px;
+    position: static;
+    transform: none;
+    margin-top: 40px;
+    opacity: 1;
   }
 `;
 
@@ -278,18 +285,15 @@ const Home = () => {
   const [hasLoadedBefore, setHasLoadedBefore] = useState(false);
 
   useEffect(() => {
-    // Check if this is the first load
     const hasLoaded = sessionStorage.getItem(INITIAL_LOAD_KEY);
     
     if (!hasLoaded) {
-      // First time loading
       const timer = setTimeout(() => {
         setIsLoading(false);
         sessionStorage.setItem(INITIAL_LOAD_KEY, 'true');
       }, 2000);
       return () => clearTimeout(timer);
     } else {
-      // Has loaded before, skip loading screen
       setIsLoading(false);
       setHasLoadedBefore(true);
     }
@@ -339,10 +343,7 @@ const Home = () => {
         <ContentWrapper
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.8, 
-            delay: isLoading && !hasLoadedBefore ? 0.5 : 0 
-          }}
+          transition={{ duration: 0.8, delay: isLoading && !hasLoadedBefore ? 0.5 : 0 }}
         >
           <RobotContainer aria-hidden="true">
             <Suspense fallback={null}>
@@ -351,9 +352,10 @@ const Home = () => {
           </RobotContainer>
 
           <Content>
-            <Title aria-level="1" role="heading">
-              Hi, I'm Kerem Comertpay
-            </Title>
+            <Logo 
+              src={process.env.PUBLIC_URL + image_logo} 
+              alt="Kerem Comertpay Logo"
+            />
             <Description>
               A passionate developer crafting digital experiences through code and creativity. I specialize in building
               innovative web solutions with modern technologies.
