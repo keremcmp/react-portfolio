@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Github, Linkedin, Mail } from 'lucide-react';
-import image_logo from "../data/Kerem.png";
+import image_logo from "../assets/gallery/Kerem.png";
 
 const AnimatedBackground = lazy(() => import('../components/AnimatedBackground'));
 const Robot2D = lazy(() => import('../components/Robot2D'));
