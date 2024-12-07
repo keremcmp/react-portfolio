@@ -17,25 +17,28 @@ const ParallaxBackground = lazy(() => import('../components/ParallaxBackground')
 const INITIAL_LOAD_KEY = 'hasLoadedBefore';
 
 const ScrollIndicator = styled(motion.div)`
- position: fixed;
- bottom: 120px;
- left: 50%;
- transform: translateX(-50%);
- z-index: 10;
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 12px;
- opacity: ${props => props.isVisible ? 1 : 0};
- transition: opacity 0.3s ease;
- pointer-events: none;
- 
- svg {
-   width: 45px;
-   height: 45px;
-   filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
- }
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translate(-50%, ${props => props.isVisible ? 0 : '20px'});
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  opacity: ${props => props.isVisible ? 1 : 0};
+  transition: all 0.5s ease;
+  pointer-events: none;
+
+  svg {
+    width: 45px;
+    height: 45px;
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+  }
 `;
+
+ 
+
 
 const ScrollText = styled(motion.span)`
  color: white;
@@ -439,12 +442,22 @@ const Home = () => {
             </ButtonContainer>
           </Content>
  
-          <ScrollIndicator isVisible={showScroll}>
+          <ScrollIndicator
+            isVisible={showScroll}
+            initial={{ opacity: 1, y: 0 }}
+            animate={{
+              opacity: showScroll ? 1 : 0,
+              y: showScroll ? 0 : 20
+            }}
+            transition={{ duration: 0.5 }}
+          >
             <ScrollText>Scroll!</ScrollText>
-
             <motion.div
               animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: 4, duration: 1.5 }}
+              transition={{ 
+                repeat: showScroll ? Infinity : 0,
+                duration: 1.5 
+              }}
             >
               <ChevronDown size={45} color="white" strokeWidth={1.5} />
             </motion.div>
