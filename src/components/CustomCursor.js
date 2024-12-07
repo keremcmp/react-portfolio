@@ -1,54 +1,72 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const Cursor = styled.div`
-  width: 8px;
-  height: 8px;
+  width: ${props => props.isHovered ? '24px' : '8px'};
+  height: ${props => props.isHovered ? '24px' : '8px'};
   background: white;
   position: fixed;
   pointer-events: none;
   user-select: none;
-  z-index: 9999;
+  z-index: 99999;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
   mix-blend-mode: difference;
+  transition: width 0.2s ease, height 0.2s ease;
+  will-change: transform;
+  transform: translate(-50%, -50%);
 `;
 
 const CustomCursor = () => {
   const cursorRef = useRef(null);
-  const mousePosition = useRef({ x: 0, y: 0 });
-  const cursorPosition = useRef({ x: 0, y: 0 });
-  const rafId = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const onMouseMove = (e) => {
-      mousePosition.current = { x: e.clientX, y: e.clientY };
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      }
     };
 
-    const updateCursor = () => {
-      // Interpolation factor (adjust for smoothness and speed)
-      const speed = 0.9;
+    const onMouseEnter = () => setIsHovered(true);
+    const onMouseLeave = () => setIsHovered(false);
 
-      cursorPosition.current.x += (mousePosition.current.x - cursorPosition.current.x) * speed;
-      cursorPosition.current.y += (mousePosition.current.y - cursorPosition.current.y) * speed;
-
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate(${cursorPosition.current.x}px, ${cursorPosition.current.y}px)`;
-      }
-
-      rafId.current = requestAnimationFrame(updateCursor);
+    const addHoverListeners = (elements) => {
+      elements.forEach(el => {
+        el.addEventListener('mouseenter', onMouseEnter);
+        el.addEventListener('mouseleave', onMouseLeave);
+      });
     };
 
     document.addEventListener('mousemove', onMouseMove);
-    rafId.current = requestAnimationFrame(updateCursor);
+    
+    // Add listeners to existing elements
+    addHoverListeners([
+      ...document.querySelectorAll('a, button, .navbar *, .button, input')
+    ]);
+
+    // Observer for dynamically added elements
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length) {
+          addHoverListeners([
+            ...document.querySelectorAll('a, button, .navbar *, .button, input')
+          ]);
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
 
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(rafId.current);
+      observer.disconnect();
     };
   }, []);
 
-  return <Cursor ref={cursorRef} />;
+  return <Cursor ref={cursorRef} isHovered={isHovered} />;
 };
 
 export default CustomCursor;

@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import image_logo from '../assets/gallery/Kerem.png'
+import ProjectTimeline from '../components/ProjectTimeline';
+import { ChevronDown } from 'lucide-react';
+
 
 const AnimatedBackground = lazy(() => import('../components/AnimatedBackground'));
 const Robot2D = lazy(() => import('../components/Robot2D'));
@@ -12,6 +15,33 @@ const ParallaxBackground = lazy(() => import('../components/ParallaxBackground')
 
 
 const INITIAL_LOAD_KEY = 'hasLoadedBefore';
+
+const ScrollIndicator = styled(motion.div)`
+ position: fixed;
+ bottom: 120px;
+ left: 50%;
+ transform: translateX(-50%);
+ z-index: 10;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 12px;
+ opacity: ${props => props.isVisible ? 1 : 0};
+ transition: opacity 0.3s ease;
+ pointer-events: none;
+ 
+ svg {
+   width: 45px;
+   height: 45px;
+   filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+ }
+`;
+
+const ScrollText = styled(motion.span)`
+ color: white;
+ font-size: 1.2rem;
+ text-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+`;
 
 const LoadingScreen = styled(motion.div)`
   position: fixed;
@@ -84,8 +114,12 @@ const HomeContainer = styled.main`
   display: flex;
   align-items: center;
   position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
+  cursor: none;
+
+  * {
+    cursor: none !important;
+  }
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -102,15 +136,17 @@ const ContentWrapper = styled(motion.div)`
   flex-direction: column;
   width: 100%;
   z-index: 3;
-  padding-top: 50px;  // Add padding to move content up
-  margin-top: -150px; // Negative margin to pull everything up
+  padding-top: 50px;
+  margin-top: -150px;
+  overflow-y: auto;
+  height: 100vh;
 
   @media (max-width: 768px) {
     align-items: center;
     justify-content: flex-start;
     height: 100%;
     padding-bottom: 40px;
-    margin-top: -60px;  // Adjust for mobile
+    margin-top: -60px;
   }
 `;
 
@@ -172,11 +208,11 @@ const BaseButton = styled(motion.button)`
   padding: clamp(12px, 2vh, 15px) clamp(20px, 3vw, 30px);
   border-radius: 5px;
   font-size: clamp(0.9rem, 1.1vw, 1.1rem);
-  cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   outline: none;
   width: 100%;
+  cursor: none !important;
 
   @media (min-width: 769px) {
     width: auto;
@@ -268,6 +304,7 @@ const IconLink = styled(motion.a)`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: none !important;
 
   &:hover {
     color: white;
@@ -285,6 +322,8 @@ const Home = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoadedBefore, setHasLoadedBefore] = useState(false);
+  const [showScroll, setShowScroll] = useState(true);
+
 
   useEffect(() => {
     const hasLoaded = sessionStorage.getItem(INITIAL_LOAD_KEY);
@@ -299,7 +338,22 @@ const Home = () => {
       setIsLoading(false);
       setHasLoadedBefore(true);
     }
+
+ 
   }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setShowScroll(false);
+      } else {
+        setShowScroll(true);
+      }
+    };
+   
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+   }, []);
+  
 
   const handleViewWork = () => {
     navigate('/skills');
@@ -325,7 +379,7 @@ const Home = () => {
           </LoadingScreen>
         )}
       </AnimatePresence>
-
+ 
       <HomeContainer role="main" aria-label="Home">
         <Helmet>
           <title>Kerem Comertpay - Web Developer Portfolio</title>
@@ -336,12 +390,12 @@ const Home = () => {
           <meta name="theme-color" content="#0f0f0f" />
           <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         </Helmet>
-
+ 
         <Suspense fallback={<LoadingFallback>Loading...</LoadingFallback>}>
           <AnimatedBackground />
           <ParallaxBackground />
         </Suspense>
-
+ 
         <ContentWrapper
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -352,7 +406,7 @@ const Home = () => {
               <Robot2D />
             </Suspense>
           </RobotContainer>
-
+ 
           <Content>
             <Logo 
               src={process.env.PUBLIC_URL + image_logo} 
@@ -384,7 +438,18 @@ const Home = () => {
               </DownloadCV>
             </ButtonContainer>
           </Content>
+ 
+          <ScrollIndicator isVisible={showScroll}>
+            <ScrollText>Scroll!</ScrollText>
 
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ repeat: 4, duration: 1.5 }}
+            >
+              <ChevronDown size={45} color="white" strokeWidth={1.5} />
+            </motion.div>
+          </ScrollIndicator>
+ 
           <SocialIcons
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -419,6 +484,7 @@ const Home = () => {
               <Mail size={20} />
             </IconLink>
           </SocialIcons>
+          <ProjectTimeline />
         </ContentWrapper>
       </HomeContainer>
     </>
