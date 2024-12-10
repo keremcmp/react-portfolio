@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 
 const Nav = styled(motion.nav)`
   position: fixed;
@@ -13,7 +14,7 @@ const Nav = styled(motion.nav)`
   justify-content: space-between;
   align-items: center;
   padding: 0 max(50px, 5vw);
-  background: ${props => props.isScrolled ? 'rgba(15, 15, 15, 0.95)' : 'rgba(15, 15, 15, 0.8)'};
+  background: ${props => props.isScrolled ? 'var(--nav-bg)' : 'var(--nav-bg)'};
   backdrop-filter: blur(10px);
   z-index: 100;
   transition: all 0.3s ease;
@@ -23,7 +24,7 @@ const Nav = styled(motion.nav)`
   }
 
   @supports not (backdrop-filter: blur(10px)) {
-    background: rgba(15, 15, 15, 0.95);
+    background: var(--bg-secondary);
   }
 `;
 
@@ -40,12 +41,12 @@ const Logo = styled(motion(Link))`
 const NavLinks = styled.div`
   display: flex;
   gap: clamp(20px, 3vw, 30px);
+  align-items: center;
 
   @media (max-width: 768px) {
     display: none;
   }
 `;
-
 const MobileNavButton = styled.button.attrs({
   'aria-label': props => props.isOpen ? 'Close menu' : 'Open menu',
   'aria-expanded': props => props.isOpen
@@ -202,6 +203,7 @@ const Navbar = () => {
             {label}
           </NavLink>
         ))}
+        <ThemeToggle />
       </NavLinks>
 
       <MobileNavButton 
@@ -231,6 +233,7 @@ const Navbar = () => {
                 {label}
               </MobileNavLink>
             ))}
+            <ThemeToggle />
           </MobileMenu>
         )}
       </AnimatePresence>
