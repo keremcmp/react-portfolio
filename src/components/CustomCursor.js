@@ -1,105 +1,88 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-const CursorDot = styled.div`
-  width: 4px;
-  height: 4px;
-  background: #000;
+const PixelCursor = styled.div`
+  width: 16px;
+  height: 16px;
   position: fixed;
   pointer-events: none;
   z-index: 99999;
-  border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: width 0.2s ease, height 0.2s ease;
-  
-  &.hovered {
-    width: 6px;
-    height: 6px;
-  }
-`;
+  image-rendering: pixelated;
 
-const CursorRing = styled.div`
-  width: 20px;
-  height: 20px;
-  border: 1px solid #000;
-  position: fixed;
-  pointer-events: none;
-  z-index: 99998;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: all 0.15s ease-out;
-  opacity: 0.5;
-  
-  &.hovered {
-    width: 40px;
-    height: 40px;
-    opacity: 0.25;
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    background: white;
+    box-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  }
+
+  /* Main pointer pixel */
+  &::before {
+    width: 3px;
+    height: 3px;
+    left: 0;
+    top: 0;
+  }
+
+  /* Second pixel */
+  &::after {
+    width: 3px;
+    height: 3px;
+    left: 3px;
+    top: 3px;
+  }
+
+  &.clicked {
+    &::before, &::after {
+      background: #cccccc;
+    }
   }
 `;
 
 const CustomCursor = () => {
-  const dotRef = useRef(null);
-  const ringRef = useRef(null);
-
-  useEffect(() => {
-    document.documentElement.style.cursor = 'none';
-    document.body.style.cursor = 'none';
-    
-    const elements = document.querySelectorAll('a, button, input, [role="button"]');
-    elements.forEach(el => {
-      el.style.cursor = 'none';
-    });
-  }, []);
+  const cursorRef = useRef(null);
 
   useEffect(() => {
     const onMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      
-      // Instant movement for dot
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${clientX}px, ${clientY}px)`;
-      }
-      
-      // Smooth movement for ring
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate(${clientX}px, ${clientY}px)`;
+      if (cursorRef.current) {
+        // Round to nearest pixel for authentic retro feel
+        const x = Math.round(e.clientX);
+        const y = Math.round(e.clientY);
+        cursorRef.current.style.transform = `translate(${x}px, ${y}px)`;
       }
     };
 
-    const onMouseEnter = () => {
-      dotRef.current?.classList.add('hovered');
-      ringRef.current?.classList.add('hovered');
+    const onMouseDown = () => {
+      cursorRef.current?.classList.add('clicked');
     };
 
-    const onMouseLeave = () => {
-      dotRef.current?.classList.remove('hovered');
-      ringRef.current?.classList.remove('hovered');
+    const onMouseUp = () => {
+      cursorRef.current?.classList.remove('clicked');
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-
-    // Add hover effects to interactive elements
-    const elements = document.querySelectorAll('a, button, input, [role="button"]');
+    // Hide default cursor
+    document.documentElement.style.cursor = 'none';
+    document.body.style.cursor = 'none';
+    
+    const elements = document.querySelectorAll('a, button, input, textarea, select');
     elements.forEach(el => {
-      el.addEventListener('mouseenter', onMouseEnter);
-      el.addEventListener('mouseleave', onMouseLeave);
+      el.style.cursor = 'none';
     });
+
+    // Add event listeners
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mouseup', onMouseUp);
 
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
-      elements.forEach(el => {
-        el.removeEventListener('mouseenter', onMouseEnter);
-        el.removeEventListener('mouseleave', onMouseLeave);
-      });
+      document.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('mouseup', onMouseUp);
     };
   }, []);
 
-  return (
-    <>
-      <CursorDot ref={dotRef} />
-      <CursorRing ref={ringRef} />
-    </>
-  );
+  return <PixelCursor ref={cursorRef} />;
 };
 
 export default CustomCursor;

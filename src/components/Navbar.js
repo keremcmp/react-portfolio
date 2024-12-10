@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import ThemeToggle from './ThemeToggle';
 
 const Nav = styled(motion.nav)`
   position: fixed;
@@ -14,7 +13,7 @@ const Nav = styled(motion.nav)`
   justify-content: space-between;
   align-items: center;
   padding: 0 max(50px, 5vw);
-  background: ${props => props.isScrolled ? 'var(--nav-bg)' : 'var(--nav-bg)'};
+  background: ${props => props.isScrolled ? 'rgba(15, 15, 15, 0.95)' : 'rgba(15, 15, 15, 0.8)'};
   backdrop-filter: blur(10px);
   z-index: 100;
   transition: all 0.3s ease;
@@ -24,7 +23,7 @@ const Nav = styled(motion.nav)`
   }
 
   @supports not (backdrop-filter: blur(10px)) {
-    background: var(--bg-secondary);
+    background: rgba(15, 15, 15, 0.95);
   }
 `;
 
@@ -47,6 +46,7 @@ const NavLinks = styled.div`
     display: none;
   }
 `;
+
 const MobileNavButton = styled.button.attrs({
   'aria-label': props => props.isOpen ? 'Close menu' : 'Open menu',
   'aria-expanded': props => props.isOpen
@@ -169,7 +169,6 @@ const Navbar = () => {
     }
   }, [isOpen]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
@@ -178,7 +177,6 @@ const Navbar = () => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       setIsOpen(false);
-      // Handle navigation here if needed
     }
   };
 
@@ -203,7 +201,6 @@ const Navbar = () => {
             {label}
           </NavLink>
         ))}
-        <ThemeToggle />
       </NavLinks>
 
       <MobileNavButton 
@@ -233,7 +230,6 @@ const Navbar = () => {
                 {label}
               </MobileNavLink>
             ))}
-            <ThemeToggle />
           </MobileMenu>
         )}
       </AnimatePresence>
