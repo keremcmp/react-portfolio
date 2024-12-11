@@ -1,7 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const PixelCursor = styled.div`
+  /* Only show cursor on devices that support hover */
+  @media (hover: none) {
+    display: none;
+  }
+
+  @media (pointer: coarse) {
+    display: none;
+  }
+
+  /* Regular cursor styles for desktop */
   width: 16px;
   height: 16px;
   position: fixed;
@@ -42,45 +52,67 @@ const PixelCursor = styled.div`
 
 const CustomCursor = () => {
   const cursorRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const onMouseMove = (e) => {
-      if (cursorRef.current) {
-        // Round to nearest pixel for authentic retro feel
-        const x = Math.round(e.clientX);
-        const y = Math.round(e.clientY);
-        cursorRef.current.style.transform = `translate(${x}px, ${y}px)`;
-      }
+    // Check if device is mobile
+    const checkMobile = () => {
+      return (('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (navigator.msMaxTouchPoints > 0));
     };
 
-    const onMouseDown = () => {
-      cursorRef.current?.classList.add('clicked');
-    };
+    setIsMobile(checkMobile());
 
-    const onMouseUp = () => {
-      cursorRef.current?.classList.remove('clicked');
-    };
+    // Only set up cursor if not on mobile
+    if (!checkMobile()) {
+      const onMouseMove = (e) => {
+        if (cursorRef.current) {
+          const x = Math.round(e.clientX);
+          const y = Math.round(e.clientY);
+          cursorRef.current.style.transform = `translate(${x}px, ${y}px)`;
+        }
+      };
 
-    // Hide default cursor
-    document.documentElement.style.cursor = 'none';
-    document.body.style.cursor = 'none';
-    
-    const elements = document.querySelectorAll('a, button, input, textarea, select');
-    elements.forEach(el => {
-      el.style.cursor = 'none';
-    });
+      const onMouseDown = () => {
+        cursorRef.current?.classList.add('clicked');
+      };
 
-    // Add event listeners
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mousedown', onMouseDown);
-    document.addEventListener('mouseup', onMouseUp);
+      const onMouseUp = () => {
+        cursorRef.current?.classList.remove('clicked');
+      };
 
-    return () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mousedown', onMouseDown);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
+      // Hide default cursor on desktop only
+      document.documentElement.style.cursor = 'none';
+      document.body.style.cursor = 'none';
+      
+      const elements = document.querySelectorAll('a, button, input, textarea, select');
+      elements.forEach(el => {
+        el.style.cursor = 'none';
+      });
+
+      // Add event listeners
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mousedown', onMouseDown);
+      document.addEventListener('mouseup', onMouseUp);
+
+      return () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mousedown', onMouseDown);
+        document.removeEventListener('mouseup', onMouseUp);
+        
+        // Restore default cursor when component unmounts
+        document.documentElement.style.cursor = '';
+        document.body.style.cursor = '';
+        elements.forEach(el => {
+          el.style.cursor = '';
+        });
+      };
+    }
   }, []);
+
+  // Don't render cursor component at all on mobile
+  if (isMobile) return null;
 
   return <PixelCursor ref={cursorRef} />;
 };
