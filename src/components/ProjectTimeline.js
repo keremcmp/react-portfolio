@@ -87,39 +87,58 @@ const TimelineDescription = styled.p`
   line-height: 1.6;
 `;
 
+const TimelineHeader = styled.h1`
+  text-align: center;
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  font-weight: bold;
+`;
+
 const ProjectTimeline = () => {
   const projects = [
     {
-      title: "Project Name 1",
-      date: "2024",
+      title: "Consultant at Carpet de Lux",
+      date: "November 2014",
       description: "Description of your first major project or achievement",
       align: "left"
     },
     {
-      title: "Project Name 2",
-      date: "2023",
+      title: "Electrician at EYC Elektra",
+      date: "Oktober 2019",
       description: "Description of your second major project or achievement",
       align: "right"
     },
     {
-      title: "Project Name 3",
-      date: "2023",
+      title: "Sales Representative at DPG Media",
+      date: "May 2022",
       description: "Description of your second major project or achievement",
       align: "left"
     },
     {
-        title: "Project Name 4",
-        date: "2023",
-        description: "Description of your second major project or achievement",
-        align: "right"
+      title: "Started my bachelor Information Sciences at the University of Amsterdam",
+      date: "September 2022",
+      description: "Description of your second major project or achievement",
+      align: "right"
     },
     {
-        title: "Project Name 5",
-        date: "2023",
-        description: "Description of your second major project or achievement",
-        align: "left"
+      title: "IT Specialist at Inhousify",
+      date: "Januari 2023",
+      description: "Description of your second major project or achievement",
+      align: "left"
     },
-
+    {
+      title: "Business Developer at Byte24",
+      date: "June 2023",
+      description: "Description of your second major project or achievement",
+      align: "right"
+    },
+    {
+      title: "Business Developer at Sterrk",
+      date: "June 2024",
+      description: "Description of your second major project or achievement",
+      align: "left"
+    },
   ];
 
   const itemVariants = {
@@ -132,26 +151,29 @@ const ProjectTimeline = () => {
   };
 
   return (
-    <TimelineContainer>
-      {projects.map((project, index) => (
-        <TimelineItem
-          key={index}
-          align={project.align}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <TimelineContent
+    <>
+      <TimelineHeader>My Professional Journey</TimelineHeader>
+      <TimelineContainer>
+        {projects.map((project, index) => (
+          <TimelineItem
+            key={index}
             align={project.align}
-            variants={itemVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
           >
-            <TimelineTitle>{project.title}</TimelineTitle>
-            <TimelineDate>{project.date}</TimelineDate>
-            <TimelineDescription>{project.description}</TimelineDescription>
-          </TimelineContent>
-        </TimelineItem>
-      ))}
-    </TimelineContainer>
+            <TimelineContent
+              align={project.align}
+              variants={itemVariants}
+            >
+              <TimelineTitle>{project.title}</TimelineTitle>
+              <TimelineDate>{project.date}</TimelineDate>
+              <TimelineDescription>{project.description}</TimelineDescription>
+            </TimelineContent>
+          </TimelineItem>
+        ))}
+      </TimelineContainer>
+    </>
   );
 };
 
