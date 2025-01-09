@@ -20,6 +20,7 @@ const ScrollIndicator = styled(motion.div)`
   position: fixed;
   bottom: 120px;
   left: 50%;
+  right: 50%;
   transform: translate(-50%, ${props => props.isVisible ? 0 : '20px'});
   z-index: 10;
   display: flex;
@@ -284,42 +285,33 @@ const SocialIcons = styled(motion.div)`
   transform: translateX(-50%);
   display: flex;
   gap: 20px;
-  z-index: 10;
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  z-index: 1000;
+  background: rgba(15, 15, 15, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 
   @media (max-width: 768px) {
-    position: static;
-    transform: none;
-    margin-top: 40px;
-    opacity: 1;
+    bottom: 20px;
+    padding: 8px 16px;
   }
 `;
 
-const IconLink = styled(motion.a)`
-  color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
-  padding: 10px;
-  border-radius: 50%;
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: none !important;
+const IconLink = styled.a`
+  color: rgba(139, 92, 246, 0.8);
+  font-size: 24px;
+  transition: color 0.3s ease;
 
   &:hover {
-    color: white;
-    background: rgba(139, 92, 246, 0.2);
-    border-color: rgba(139, 92, 246, 0.4);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 768px) {
-    padding: 8px;
+    color: rgba(139, 92, 246, 1);
   }
 `;
+
+// const Wrapper = styled.div`
+//   position: relative;
+//   min-height: 100vh;
+// `;
 
 const Home = () => {
   const navigate = useNavigate();
@@ -462,43 +454,43 @@ const Home = () => {
               <ChevronDown size={45} color="white" strokeWidth={1.5} />
             </motion.div>
           </ScrollIndicator>
- 
-          <SocialIcons
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <IconLink
-              href="https://github.com/keremcmp"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Visit my GitHub profile"
-            >
-              <Github size={20} />
-            </IconLink>
-            <IconLink
-              href="https://www.linkedin.com/in/kerem-comertpay-409764182/"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Visit my LinkedIn profile"
-            >
-              <Linkedin size={20} />
-            </IconLink>
-            <IconLink
-              href="mailto:keremcmp@hotmail.com"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Send me an email"
-            >
-              <Mail size={20} />
-            </IconLink>
-          </SocialIcons>
           <ProjectTimeline />
         </ContentWrapper>
+
+        <SocialIcons
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <IconLink
+            href="https://github.com/keremcmp"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Visit my GitHub profile"
+          >
+            <Github size={20} />
+          </IconLink>
+          <IconLink
+            href="https://www.linkedin.com/in/kerem-comertpay-409764182/"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Visit my LinkedIn profile"
+          >
+            <Linkedin size={20} />
+          </IconLink>
+          <IconLink
+            href="mailto:keremcmp@hotmail.com"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Send me an email"
+          >
+            <Mail size={20} />
+          </IconLink>
+        </SocialIcons>
       </HomeContainer>
     </>
   );
