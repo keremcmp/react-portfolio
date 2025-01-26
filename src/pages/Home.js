@@ -319,7 +319,6 @@ const Home = () => {
   const [hasLoadedBefore, setHasLoadedBefore] = useState(false);
   const [showScroll, setShowScroll] = useState(true);
 
-
   useEffect(() => {
     const hasLoaded = sessionStorage.getItem(INITIAL_LOAD_KEY);
     
@@ -349,6 +348,14 @@ const Home = () => {
     return () => window.removeEventListener('scroll', handleScroll);
    }, []);
   
+  useEffect(() => {
+    // Hide scroll indicator after 5 seconds
+    const timer = setTimeout(() => {
+      setShowScroll(false);
+    }, 7000);
+
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleViewWork = () => {
     navigate('/skills');
