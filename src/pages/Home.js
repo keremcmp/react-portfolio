@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useCallback, useMemo, memo } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Github, Linkedin, Mail } from 'lucide-react';
 import image_logo from '../assets/gallery/Kerem.png'
 import ProjectTimeline from '../components/ProjectTimeline';
 import { ChevronDown } from 'lucide-react';
+import { throttle } from 'lodash';
 
 
 const AnimatedBackground = lazy(() => import('../components/AnimatedBackground'));
@@ -21,13 +22,13 @@ const ScrollIndicator = styled(motion.div)`
   bottom: 120px;
   left: 50%;
   right: 50%;
-  transform: translate(-50%, ${props => props.isVisible ? 0 : '20px'});
+  transform: translate(-50%, 0);
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  opacity: ${props => props.isVisible ? 1 : 0};
+  opacity: 1;
   transition: all 0.5s ease;
   pointer-events: none;
 
@@ -141,7 +142,7 @@ const ContentWrapper = styled(motion.div)`
   width: 100%;
   z-index: 3;
   padding-top: 50px;
-  margin-top: -150px;
+  margin-top: 0;
   overflow-y: auto;
   height: 100vh;
 
@@ -150,7 +151,7 @@ const ContentWrapper = styled(motion.div)`
     justify-content: flex-start;
     height: 100%;
     padding-bottom: 40px;
-    margin-top: -60px;
+    margin-top: 0;
   }
 `;
 
@@ -261,7 +262,8 @@ const DownloadCV = styled(BaseButton).attrs({ as: 'a' })`
 const RobotContainer = styled.div`
   position: absolute;
   right: 0;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
   width: 50%;
   height: 100%;
   z-index: 2;
@@ -275,6 +277,7 @@ const RobotContainer = styled.div`
     right: 0;
     top: auto;
     opacity: 0.2;
+    transform: none;
   }
 `;
 
@@ -319,69 +322,102 @@ const Home = () => {
   const [hasLoadedBefore, setHasLoadedBefore] = useState(false);
   const [showScroll, setShowScroll] = useState(true);
 
+  const handleViewWork = useCallback(() => {
+    navigate('/skills');
+  }, [navigate]);
+
   useEffect(() => {
     const hasLoaded = sessionStorage.getItem(INITIAL_LOAD_KEY);
+    let loadTimer;
     
     if (!hasLoaded) {
-      const timer = setTimeout(() => {
+      loadTimer = setTimeout(() => {
         setIsLoading(false);
         sessionStorage.setItem(INITIAL_LOAD_KEY, 'true');
       }, 2000);
-      return () => clearTimeout(timer);
     } else {
       setIsLoading(false);
       setHasLoadedBefore(true);
     }
 
- 
-  }, []);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setShowScroll(false);
-      } else {
-        setShowScroll(true);
-      }
+    return () => {
+      if (loadTimer) clearTimeout(loadTimer);
     };
-   
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-   }, []);
-  
+  }, []);
+
   useEffect(() => {
-    // Hide scroll indicator after 5 seconds
-    const timer = setTimeout(() => {
+    const handleScroll = throttle(() => {
+      setShowScroll(window.scrollY <= 100);
+    }, 100);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    const hideTimer = setTimeout(() => {
       setShowScroll(false);
-    }, 7000);
+    }, 5000);
 
-    return () => clearTimeout(timer);
-  }, []); // Empty dependency array means this runs once on mount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(hideTimer);
+    };
+  }, []);
 
-  const handleViewWork = () => {
-    navigate('/skills');
-  };
+  const SocialIconsSection = useMemo(() => (
+    <SocialIcons
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <IconLink
+        href="https://github.com/keremcmp"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Visit my GitHub profile"
+      >
+        <Github size={20} />
+      </IconLink>
+      <IconLink
+        href="https://www.linkedin.com/in/kerem-comertpay-409764182/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Visit my LinkedIn profile"
+      >
+        <Linkedin size={20} />
+      </IconLink>
+      <IconLink
+        href="mailto:keremcmp@hotmail.com"
+        aria-label="Send me an email"
+      >
+        <Mail size={20} />
+      </IconLink>
+    </SocialIcons>
+  ), []);
+
+  const LoadingScreenComponent = useMemo(() => (
+    isLoading && !hasLoadedBefore && (
+      <LoadingScreen
+        initial={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <LoadingText
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Welcome
+        </LoadingText>
+        <LoadingBar />
+      </LoadingScreen>
+    )
+  ), [isLoading, hasLoadedBefore]);
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {isLoading && !hasLoadedBefore && (
-          <LoadingScreen
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <LoadingText
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Welcome
-            </LoadingText>
-            <LoadingBar />
-          </LoadingScreen>
-        )}
+        {LoadingScreenComponent}
       </AnimatePresence>
- 
+
       <HomeContainer role="main" aria-label="Home">
         <Helmet>
           <title>Kerem Comertpay - Web Developer Portfolio</title>
@@ -392,14 +428,14 @@ const Home = () => {
           <meta name="theme-color" content="#0f0f0f" />
           <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         </Helmet>
- 
+
         <Suspense fallback={<LoadingFallback>Loading...</LoadingFallback>}>
           <AnimatedBackground />
           <ParallaxBackground />
         </Suspense>
- 
+
         <ContentWrapper
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: isLoading && !hasLoadedBefore ? 0.5 : 0 }}
         >
@@ -442,7 +478,6 @@ const Home = () => {
           </Content>
  
           <ScrollIndicator
-            isVisible={showScroll}
             initial={{ opacity: 1, y: 0 }}
             animate={{
               opacity: showScroll ? 1 : 0,
@@ -452,6 +487,7 @@ const Home = () => {
           >
             <ScrollText>Scroll!</ScrollText>
             <motion.div
+              initial={{ y: 0 }}
               animate={{ y: [0, 10, 0] }}
               transition={{ 
                 repeat: showScroll ? Infinity : 0,
@@ -464,43 +500,10 @@ const Home = () => {
           <ProjectTimeline />
         </ContentWrapper>
 
-        <SocialIcons
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <IconLink
-            href="https://github.com/keremcmp"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Visit my GitHub profile"
-          >
-            <Github size={20} />
-          </IconLink>
-          <IconLink
-            href="https://www.linkedin.com/in/kerem-comertpay-409764182/"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Visit my LinkedIn profile"
-          >
-            <Linkedin size={20} />
-          </IconLink>
-          <IconLink
-            href="mailto:keremcmp@hotmail.com"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Send me an email"
-          >
-            <Mail size={20} />
-          </IconLink>
-        </SocialIcons>
+        {SocialIconsSection}
       </HomeContainer>
     </>
   );
 };
 
-export default Home;
+export default memo(Home);

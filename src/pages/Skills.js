@@ -1,5 +1,5 @@
 // src/pages/Skills.js
-// import React, { lazy, Suspense } from 'react';
+import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
@@ -20,30 +20,6 @@ const Grid = styled.div`
   gap: clamp(15px, 2vw, 20px);
   padding: clamp(10px, 2vw, 20px);
   margin-bottom: clamp(30px, 5vh, 60px);
-`;
-
-const SkillCard = styled(motion.article)`
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  padding: clamp(15px, 3vw, 20px);
-  border-radius: 10px;
-  height: auto;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  
-  @supports not (backdrop-filter: blur(10px)) {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  &:focus-within {
-    outline: 2px solid #8b5cf6;
-    outline-offset: 2px;
-  }
 `;
 
 const SkillTitle = styled.h3`
@@ -112,7 +88,7 @@ const SubSectionTitle = styled(motion.h3)`
   color: rgba(255, 255, 255, 0.9);
 `;
 
-// Update the data to include more meaningful descriptions
+// Memoize the static data
 const skillsData = [
   {
     title: "Sales Engineer",
@@ -141,67 +117,33 @@ const programmingSkills = [
   { name: 'Node.js', level: 80, color: '#4F9800', years: 2 },
   { name: 'HTML/CSS', level: 95, color: '#4F9800', years: 3 },
   { name: 'SQL', level: 70, color: '#D57526', years: 2 },
-  {name: 'Scikit-learn', level: 75, color: '#D57526', years: 2},
-  {name: 'R', level: 80, color: '#4F9800', years: 3 },
-  {name: 'pandas', level: 85, color: '#4F9800', years: 2}
-
-
-  // scikit-learn, R, pandas, C#
+  { name: 'Scikit-learn', level: 75, color: '#D57526', years: 2 },
+  { name: 'R', level: 80, color: '#4F9800', years: 3 },
+  { name: 'pandas', level: 85, color: '#4F9800', years: 2 }
 ];
 
-const Skills = () => {
-  return (
-    <SkillsContainer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Helmet>
-        <title>Skills - Kerem Comertpay</title>
-        <meta name="description" content="Explore my technical skills and expertise in web development, including frontend, backend, and UI/UX design." />
-      </Helmet>
+// Create memoized components for reusable parts
+const MemoizedSkillCard = memo(({ skill, index }) => (
+  <StyledSkillCard
+    key={skill.title}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.1 }}
+    whileHover={{ 
+      scale: 1.02,
+      boxShadow: `0 0 20px ${skill.color}33`
+    }}
+    viewport={{ once: true, margin: "-50px" }}
+  >
+    <span role="img" aria-label={skill.title} style={{ fontSize: '2rem', marginBottom: '15px' }}>
+      {skill.icon}
+    </span>
+    <SkillTitle>{skill.title}</SkillTitle>
+    <SkillDescription>{skill.description}</SkillDescription>
+  </StyledSkillCard>
+));
 
-      <SectionTitle
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        My Skills
-      </SectionTitle>
-      
-      <Grid>
-        {skillsData.map((skill, index) => (
-          <SkillCard
-            key={skill.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ 
-              scale: 1.02,
-              boxShadow: `0 0 20px ${skill.color}33`
-            }}
-            viewport={{ once: true, margin: "-50px" }}
-          >
-            <span role="img" aria-label={skill.title} style={{ fontSize: '2rem', marginBottom: '15px' }}>
-              {skill.icon}
-            </span>
-            <SkillTitle>{skill.title}</SkillTitle>
-            <SkillDescription>{skill.description}</SkillDescription>
-          </SkillCard>
-        ))}
-      </Grid>
-
-      <ProgressSection>
-        <SubSectionTitle
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          Programming Proficiency
-        </SubSectionTitle>
-        
-        {programmingSkills.map((skill, index) => (
+const ProgressItem = memo(({ skill, index }) => (
   <ProgressContainer key={skill.name}>
     <ProgressLabel>
       <span>{skill.name}</span>
@@ -216,10 +158,87 @@ const Skills = () => {
       />
     </ProgressBar>
   </ProgressContainer>
-))}
-      </ProgressSection>
+));
+
+const Skills = () => {
+  // Memoize the skill cards section
+  const skillCardsSection = useMemo(() => (
+    <Grid>
+      {skillsData.map((skill, index) => (
+        <MemoizedSkillCard key={skill.title} skill={skill} index={index} />
+      ))}
+    </Grid>
+  ), []);
+
+  // Memoize the progress section
+  const progressSection = useMemo(() => (
+    <ProgressSection>
+      <SubSectionTitle
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+      >
+        Programming Proficiency
+      </SubSectionTitle>
+      {programmingSkills.map((skill, index) => (
+        <ProgressItem key={skill.name} skill={skill} index={index} />
+      ))}
+    </ProgressSection>
+  ), []);
+
+  return (
+    <SkillsContainer
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Helmet>
+        <title>Skills - Kerem Comertpay</title>
+        <meta 
+          name="description" 
+          content="Explore my technical skills and expertise in web development, including frontend, backend, and UI/UX design." 
+        />
+      </Helmet>
+
+      <SectionTitle
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        My Skills
+      </SectionTitle>
+      
+      {skillCardsSection}
+      {progressSection}
     </SkillsContainer>
   );
 };
 
-export default Skills;
+// Keep only StyledSkillCard
+const StyledSkillCard = styled(motion.article)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: clamp(15px, 3vw, 20px);
+  border-radius: 10px;
+  height: auto;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  @supports not (backdrop-filter: blur(10px)) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &:focus-within {
+    outline: 2px solid #8b5cf6;
+    outline-offset: 2px;
+  }
+`;
+
+// Export memoized component
+export default memo(Skills);
