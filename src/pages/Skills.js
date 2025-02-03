@@ -8,16 +8,18 @@ import Tilt from 'react-parallax-tilt';
 const SkillsContainer = styled(motion.main)`
   min-height: 100vh;
   padding: clamp(60px, 10vh, 100px) clamp(20px, 5vw, 50px);
+  background: #0f0f0f;
   
   @media (max-width: 768px) {
     transform: none !important;
     width: ${props => props.level}%;
+    background: #0f0f0f;
   }
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: clamp(15px, 2vw, 20px);
   padding: clamp(10px, 2vw, 20px);
   margin-bottom: clamp(30px, 5vh, 60px);
@@ -128,6 +130,8 @@ const MemoizedSkillCard = memo(({ skill, index }) => (
   <Tilt
     glareEnable={true}
     glareMaxOpacity={0.45}
+    glarePosition="all"
+    glareBorderRadius="10px"
     scale={1.02}
     tiltMaxAngleX={15}
     tiltMaxAngleY={15}
@@ -225,8 +229,8 @@ const StyledSkillCard = styled(motion.article)`
   backdrop-filter: blur(10px);
   padding: clamp(15px, 3vw, 20px);
   border-radius: 10px;
-  height: auto;
-  min-height: 200px;
+  width: 100%;
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -237,7 +241,12 @@ const StyledSkillCard = styled(motion.article)`
   transform: perspective(1000px);
   
   @supports not (backdrop-filter: blur(10px)) {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(15, 15, 15, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
   }
 
   &:focus-within {
