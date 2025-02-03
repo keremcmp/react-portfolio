@@ -3,6 +3,7 @@ import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
+import Tilt from 'react-parallax-tilt';
 
 const SkillsContainer = styled(motion.main)`
   min-height: 100vh;
@@ -124,23 +125,26 @@ const programmingSkills = [
 
 // Create memoized components for reusable parts
 const MemoizedSkillCard = memo(({ skill, index }) => (
-  <StyledSkillCard
-    key={skill.title}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay: index * 0.1 }}
-    whileHover={{ 
-      scale: 1.02,
-      boxShadow: `0 0 20px ${skill.color}33`
-    }}
-    viewport={{ once: true, margin: "-50px" }}
+  <Tilt
+    glareEnable={true}
+    glareMaxOpacity={0.45}
+    scale={1.02}
+    tiltMaxAngleX={15}
+    tiltMaxAngleY={15}
   >
-    <span role="img" aria-label={skill.title} style={{ fontSize: '2rem', marginBottom: '15px' }}>
-      {skill.icon}
-    </span>
-    <SkillTitle>{skill.title}</SkillTitle>
-    <SkillDescription>{skill.description}</SkillDescription>
-  </StyledSkillCard>
+    <StyledSkillCard
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      viewport={{ once: true, margin: "-50px" }}
+    >
+      <span role="img" aria-label={skill.title} style={{ fontSize: '2rem', marginBottom: '15px' }}>
+        {skill.icon}
+      </span>
+      <SkillTitle>{skill.title}</SkillTitle>
+      <SkillDescription>{skill.description}</SkillDescription>
+    </StyledSkillCard>
+  </Tilt>
 ));
 
 const ProgressItem = memo(({ skill, index }) => (
@@ -229,6 +233,8 @@ const StyledSkillCard = styled(motion.article)`
   align-items: center;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
   
   @supports not (backdrop-filter: blur(10px)) {
     background: rgba(255, 255, 255, 0.08);
