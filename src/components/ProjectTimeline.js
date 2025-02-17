@@ -100,45 +100,53 @@ const ProjectTimeline = () => {
     {
       title: "Consultant at Carpet de Lux",
       date: "November 2014",
-      description: "Description of your first major project or achievement",
+      description: "Here I have done the administration and the various sales within the company.",
       align: "left"
     },
     {
       title: "Electrician at EYC Elektra",
       date: "Oktober 2019",
-      description: "Description of your second major project or achievement",
+      description: "I have done the installation of the electrical installations and the maintenance of the installations.",
       align: "right"
     },
     {
       title: "Sales Representative at DPG Media",
       date: "May 2022",
-      description: "Description of your second major project or achievement",
+      description: "I have done the sales of the company.",
       align: "left"
     },
     {
       title: "Started my bachelor Information Sciences at the University of Amsterdam",
       date: "September 2022",
-      description: "Description of your second major project or achievement",
+      description: "",
       align: "right"
     },
     {
       title: "IT Specialist at Inhousify",
       date: "Januari 2023",
-      description: "Description of your second major project or achievement",
+      description: "I have worked with VMWare and various other technologies.",
       align: "left"
     },
     {
       title: "Business Developer at Byte24",
       date: "June 2023",
-      description: "Description of your second major project or achievement",
+      description: "Sales engineering and overall client management.",
       align: "right"
     },
     {
       title: "Business Developer at Sterrk",
       date: "June 2024",
-      description: "Description of your second major project or achievement",
+      description: "Sales engineering and overall client management.",
       align: "left"
     },
+    {
+      title: "Business Developer at Maxime",
+      date: "January 2025",
+      description: "Sales engineering and overall client management. Also working with the development of the company.",
+      align: "right"
+    },
+    
+    
   ];
 
   const itemVariants = {
