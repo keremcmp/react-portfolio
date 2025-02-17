@@ -97,7 +97,7 @@ const skillsData = [
     title: "Sales Engineer",
     description: "I have been in sales for almost 10 years now and have developed myself in different sections of selling",
     color: "#61DAFB",
-    icon: ""
+    icon: "💼"
   },
   {
     title: "Backend Development",

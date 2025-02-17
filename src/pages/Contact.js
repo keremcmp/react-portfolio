@@ -17,11 +17,13 @@ const ContactContainer = styled.main`
 const ContactForm = styled(motion.form)`
   width: 100%;
   max-width: min(600px, 90%);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   padding: clamp(20px, 5vw, 40px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   
   @supports not (backdrop-filter: blur(10px)) {
     background: rgba(255, 255, 255, 0.08);
@@ -67,6 +69,8 @@ const baseInputStyles = `
 
 const Input = styled.input`
   ${baseInputStyles}
+  padding: 15px;
+  border-radius: 10px;
 `;
 
 const TextArea = styled.textarea`
@@ -75,34 +79,34 @@ const TextArea = styled.textarea`
   resize: vertical;
   min-height: 100px;
   max-height: 300px;
+  padding: 15px;
+  border-radius: 10px;
 `;
 
 const SubmitButton = styled(motion.button)`
   width: 100%;
   padding: clamp(12px, 2vh, 15px);
-  background: ${props => props.disabled ? 'rgba(255, 255, 255, 0.1)' : 'white'};
-  color: ${props => props.disabled ? 'rgba(255, 255, 255, 0.5)' : '#0f0f0f'};
+  background: linear-gradient(90deg, #8b5cf6, #6b46c1);
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: clamp(1rem, 1.5vw, 1.1rem);
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   
+  &:hover {
+    background: linear-gradient(90deg, #6b46c1, #8b5cf6);
+    transform: translateY(-2px);
+  }
+
   &:focus-visible {
     outline: 2px solid #8b5cf6;
     outline-offset: 2px;
   }
-
-  ${props => !props.disabled && `
-    &:hover {
-      background: rgba(255, 255, 255, 0.9);
-      transform: translateY(-2px);
-    }
-  `}
 `;
 
 const LoadingSpinner = styled(motion.div)`
