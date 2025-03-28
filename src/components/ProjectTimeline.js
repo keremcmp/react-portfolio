@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
@@ -95,83 +95,88 @@ const TimelineHeader = styled.h1`
   font-weight: bold;
 `;
 
+// Animation variants - moved outside component to prevent recreation on each render
+const itemVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
+
 const ProjectTimeline = () => {
-  const projects = [
+  // Career timeline data
+  const projects = useMemo(() => [
     {
       title: "Consultant at Carpet de Lux",
       date: "November 2014",
+      sortDate: new Date(2014, 10), // Note: months are 0-indexed in JavaScript
       description: "Here I have done the administration and the various sales within the company.",
-      align: "left"
     },
     {
       title: "Electrician at EYC Elektra",
       date: "Oktober 2019",
+      sortDate: new Date(2019, 9),
       description: "I have done the installation of the electrical installations and the maintenance of the installations.",
-      align: "right"
     },
     {
       title: "Sales Representative at DPG Media",
       date: "May 2022",
+      sortDate: new Date(2022, 4),
       description: "I have done the sales of the company.",
-      align: "left"
     },
     {
       title: "Started my bachelor Information Sciences at the University of Amsterdam",
       date: "September 2022",
+      sortDate: new Date(2022, 8),
       description: "",
-      align: "right"
     },
     {
       title: "IT Specialist at Inhousify",
       date: "Januari 2023",
+      sortDate: new Date(2023, 0),
       description: "I have worked with VMWare and various other technologies.",
-      align: "left"
     },
     {
       title: "Business Developer at Byte24",
       date: "June 2023",
+      sortDate: new Date(2023, 5),
       description: "Sales engineering and overall client management.",
-      align: "right"
     },
     {
       title: "Business Developer at Sterrk",
       date: "June 2024",
+      sortDate: new Date(2024, 5),
       description: "Sales engineering and overall client management.",
-      align: "left"
     },
     {
       title: "Business Developer at Maxime",
       date: "January 2025",
+      sortDate: new Date(2025, 0),
       description: "Sales engineering and overall client management. Also working with the development of the company.",
-      align: "right"
     },
-    
-    
-  ];
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
+  ], []);
+  
+  // Sort projects by date (newest first) - done inside useMemo to avoid unnecessary re-sorting
+  const sortedProjects = useMemo(() => 
+    [...projects].sort((a, b) => b.sortDate - a.sortDate),
+  [projects]);
 
   return (
     <>
       <TimelineHeader>My Professional Journey</TimelineHeader>
       <TimelineContainer>
-        {projects.map((project, index) => (
+        {sortedProjects.map((project, index) => (
           <TimelineItem
             key={index}
-            align={project.align}
+            align={index % 2 === 0 ? "left" : "right"}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
             <TimelineContent
-              align={project.align}
+              align={index % 2 === 0 ? "left" : "right"}
               variants={itemVariants}
             >
               <TimelineTitle>{project.title}</TimelineTitle>
@@ -185,4 +190,4 @@ const ProjectTimeline = () => {
   );
 };
 
-export default ProjectTimeline;
+export default React.memo(ProjectTimeline);
