@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import image_logo from '../assets/gallery/Kerem.png'
 import ProjectTimeline from '../components/ProjectTimeline';
+import Footer from '../components/Footer';
 import { ChevronDown } from 'lucide-react';
 import { throttle } from 'lodash';
 
@@ -321,6 +322,15 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoadedBefore, setHasLoadedBefore] = useState(false);
   const [showScroll, setShowScroll] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [businessInfo, setBusinessInfo] = useState({
+    kvkNumber: "96855053", // Replace with your actual KVK number
+    businessName: "KMC Systems",
+    vatNumber: "NL123456789B01", // Replace with your actual VAT number
+    address: "Pieter Stastokstraat 18, 1507PE ZAANDAM",
+    email: "keremcmp@hotmail.com",
+    phone: "+31 6166 2268"
+  });
 
   const handleViewWork = useCallback(() => {
     navigate('/skills');
@@ -498,6 +508,15 @@ const Home = () => {
             </motion.div>
           </ScrollIndicator>
           <ProjectTimeline />
+          
+          <Footer 
+            kvkNumber={businessInfo.kvkNumber}
+            businessName={businessInfo.businessName}
+            vatNumber={businessInfo.vatNumber}
+            address={businessInfo.address}
+            email={businessInfo.email}
+            phone={businessInfo.phone}
+          />
         </ContentWrapper>
 
         {SocialIconsSection}
