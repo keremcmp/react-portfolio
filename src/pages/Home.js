@@ -324,16 +324,16 @@ const Home = () => {
   const [showScroll, setShowScroll] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const [businessInfo, setBusinessInfo] = useState({
-    kvkNumber: "96855053", // Replace with your actual KVK number
+    kvkNumber: "96855053", 
     businessName: "KMC Systems",
-    vatNumber: "NL123456789B01", // Replace with your actual VAT number
+    vatNumber: "NL123456789B01", 
     address: "Pieter Stastokstraat 18, 1507PE ZAANDAM",
     email: "keremcmp@hotmail.com",
     phone: "+31 6166 2268"
   });
 
   const handleViewWork = useCallback(() => {
-    navigate('/skills');
+    navigate('/gallery');
   }, [navigate]);
 
   useEffect(() => {
