@@ -475,7 +475,7 @@ const Home = () => {
                 View My Work
               </CTA>
               <DownloadCV
-                href={process.env.PUBLIC_URL + '/documents/cute.pdf'}
+                href={process.env.PUBLIC_URL + '/documents/Resume.pdf'}
                 download="Kerem-Comertpay-CV.pdf"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

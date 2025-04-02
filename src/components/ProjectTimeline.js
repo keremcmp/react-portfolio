@@ -110,13 +110,13 @@ const ProjectTimeline = () => {
   const projects = useMemo(() => [
     {
       title: "Consultant at Carpet de Lux",
-      date: "November 2014",
+      date: "January 2017",
       sortDate: new Date(2014, 10), // Note: months are 0-indexed in JavaScript
       description: "Here I have done the administration and the various sales within the company.",
     },
     {
       title: "Electrician at EYC Elektra",
-      date: "Oktober 2019",
+      date: "October 2019",
       sortDate: new Date(2019, 9),
       description: "I have done the installation of the electrical installations and the maintenance of the installations.",
     },
@@ -139,19 +139,19 @@ const ProjectTimeline = () => {
       description: "I have worked with VMWare and various other technologies.",
     },
     {
-      title: "Business Developer at Byte24",
+      title: "(Business) Developer at Byte24",
       date: "June 2023",
       sortDate: new Date(2023, 5),
       description: "Sales engineering and overall client management.",
     },
     {
-      title: "Business Developer at Sterrk",
+      title: "(Business) Developer at Sterrk",
       date: "June 2024",
       sortDate: new Date(2024, 5),
       description: "Sales engineering and overall client management.",
     },
     {
-      title: "Business Developer at Maxime",
+      title: "(Business) Developer at Maxime",
       date: "January 2025",
       sortDate: new Date(2025, 0),
       description: "Sales engineering and overall client management. Also working with the development of the company.",
