@@ -1,0 +1,38 @@
+* {
+  cursor: none !important;
+  -webkit-cursor: none;
+  -moz-cursor: none;
+}
+
+html, 
+body,
+a,
+button,
+input,
+textarea,
+select {
+  cursor: none !important;
+  -webkit-cursor: none;
+  -moz-cursor: none;
+}
+
+/* Keep your existing index.css styles below */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html, body, #root, a, button, input, 
+.navbar, .navbar *, 
+.button, .button * {
+  cursor: none !important;
+}
