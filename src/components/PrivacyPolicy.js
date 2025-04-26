@@ -5,20 +5,23 @@ const PrivacyContainer = styled.div`
   padding: 40px 20px;
   max-width: 800px;
   margin: 40px auto;
-  background-color: #f9f9f9; // Light background for readability
+  background: rgba(15, 15, 15, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: #333; // Darker text color
+  color: rgba(255, 255, 255, 0.9);
 
   h1 {
     text-align: center;
     margin-bottom: 30px;
-    color: #555;
+    color: rgba(255, 255, 255, 0.95);
   }
 
   p {
     line-height: 1.6;
     margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.85);
   }
 
   // Add some basic responsive padding
@@ -29,6 +32,11 @@ const PrivacyContainer = styled.div`
 `;
 
 const PrivacyPolicy = () => {
+  const lastUpdated = new Date().toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
   return (
     <PrivacyContainer>
       <h1>Privacy Policy</h1>
@@ -49,9 +57,9 @@ const PrivacyPolicy = () => {
         We are committed to ensuring that your information is secure. While no online transmission is
         100% secure, we take reasonable precautions to protect the information submitted via the contact form.
       </p>
-       <p>
-        This privacy statement is subject to change without notice. Last updated: [Date - you can fill this in].
-       </p>
+      <p>
+        This privacy statement is subject to change without notice. Last updated: {lastUpdated}.
+      </p>
     </PrivacyContainer>
   );
 };
