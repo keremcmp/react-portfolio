@@ -100,7 +100,6 @@ const Footer = ({
           
           <InfoSection>
             <SectionTitle>Contact</SectionTitle>
-            <InfoText><strong>Address:</strong> {address}</InfoText>
             <InfoText><strong>Email:</strong> {email}</InfoText>
             <InfoText><strong>Phone:</strong> {phone}</InfoText>
           </InfoSection>

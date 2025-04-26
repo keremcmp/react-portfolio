@@ -322,12 +322,10 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoadedBefore, setHasLoadedBefore] = useState(false);
   const [showScroll, setShowScroll] = useState(true);
-  // eslint-disable-next-line no-unused-vars
-  const [businessInfo, setBusinessInfo] = useState({
+  const [businessInfo] = useState({
     kvkNumber: "96855053", 
     businessName: "KMC Systems",
     vatNumber: "NL005233304B45", 
-    address: "Pieter Stastokstraat 18, 1507PE ZAANDAM",
     email: "keremcmp@hotmail.com",
     phone: "+31 6166 2268"
   });
@@ -513,7 +511,6 @@ const Home = () => {
             kvkNumber={businessInfo.kvkNumber}
             businessName={businessInfo.businessName}
             vatNumber={businessInfo.vatNumber}
-            address={businessInfo.address}
             email={businessInfo.email}
             phone={businessInfo.phone}
           />
