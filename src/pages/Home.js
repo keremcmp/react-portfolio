@@ -21,9 +21,8 @@ const INITIAL_LOAD_KEY = 'hasLoadedBefore';
 const ScrollIndicator = styled(motion.div)`
   position: fixed;
   bottom: 120px;
-  left: 50%;
-  right: 50%;
-  transform: translate(-50%, 0);
+  left: 48%;
+  transform: translateX(-50%);
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -356,18 +355,21 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    // Restore throttle
     const handleScroll = throttle(() => {
-      setShowScroll(window.scrollY <= 100);
+      setShowScroll(window.scrollY <= 100); 
     }, 100);
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     
+    // Restore the timer logic
     const hideTimer = setTimeout(() => {
       setShowScroll(false);
     }, 5000);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      // Restore clearTimeout for the timer
       clearTimeout(hideTimer);
     };
   }, []);
